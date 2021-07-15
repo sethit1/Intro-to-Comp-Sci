@@ -1,0 +1,76 @@
+#include <iostream>
+#include <string>
+
+using CCnum = long long;
+std::string getCCNum();  // done, get # from user
+std::string checkCCnumLength(std::string);  // done, check string is 16 digits
+CCnum stringToLongLong(std::string);  // done, convert string to int(long long)
+void checkLuhn(CCnum);  // done, check via Luhn's Algorithm that # is valid
+int addEvens(CCnum);  // done
+int addOdds(CCnum);  //done
+
+int main() {
+	std::string CCNum = getCCNum();
+	CCnum CC = stringToLongLong(CCNum); 
+	checkLuhn(CC);
+}
+
+
+std::string getCCNum() {
+	std::cout << "Please enter a valid Credit Card Number. \n";
+	std::string CCNum;
+	std::cin >> CCNum;
+	return checkCCnumLength(CCNum);
+}
+
+std::string checkCCnumLength(std::string s) {
+	if (s.length() != 16) {
+		std::cout << "Invalid #\n";
+		return getCCNum();
+	}
+	else {
+		return s;
+	}
+}
+
+CCnum stringToLongLong(std::string s) {
+	CCnum CC = std::stoll(s, nullptr, 10);
+	return CC;
+}
+
+void checkLuhn(CCnum n) {
+	int evens = addEvens(n);
+	int odds = addOdds(n);
+	int total = evens + odds;
+	if (total % 10 == 0) {
+		std::cout << "Alls Good!\n";
+	}
+	else {
+		std::cout << "Nope!\n";
+	}
+}
+
+int addEvens(CCnum n) {
+	int evens = 0;
+	for (int i = 0; i < 8; i++) {
+		n = n / 10;
+		int evenDigit = n % 10;
+		evenDigit = evenDigit * 2;
+		if (evenDigit > 9) {
+			evenDigit = evenDigit % 10 + evenDigit / 10;
+		}
+		evens = evens + (evenDigit);
+		n = n / 10;
+	}
+	return evens;
+}
+
+int addOdds(CCnum n) {
+	int odds = 0;
+	for (int i = 0; i < 8; i++) {
+		int oddDigit = n % 10; 
+		odds = odds + oddDigit;
+		n = n / 100;
+	}
+	return odds;
+}
